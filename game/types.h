@@ -11,4 +11,5 @@ typedef enum {
     UNASSIGNED
 } Type;
 
+int get_material(Type type);
 #endif
