@@ -1,15 +1,13 @@
 #include "./pieces.h"
 #include "./board.h"
+#include "types.h"
 #include <stdio.h>
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-typedef struct {
-    int row;
-    int col;
-} Pos;
+
 
 Pos init_pos(int row, int col)
 {
@@ -25,74 +23,69 @@ void print_pos(Pos pos)
     cout << "Row: " << pos.row << " Col: " << pos.col << endl;
 }
 
-class Piece
+Piece::Piece(int row, int col, bool white)
 {
-    public:
-        Piece(int row, int col)
-        {
-            this->row = row;
-            this->col = col;
-        }
+    this->row = row;
+    this->col = col;
+    this->white = white;
+}
 
-        vector<Pos> get_legal_moves(Board board)
-        {
-            vector<Pos> moves;
-            return moves;
-        }
 
-        void move(Board * board, int new_row, int new_col)
-        {
-            board->tiles[new_row][new_col]->type = type;
-            row = new_row;
-            col = new_col;
-            board->tiles[row][col]->type = EMPTY;
-        }
 
-        int row;
-        int col;
-        Type type = UNASSIGNED;
-};
 
-class Pawn : public Piece
+
+// Returns legal moves for a given pawn
+vector<Pos> Pawn::get_legal_moves(Board * board)
 {
-    public:
-        using Piece::Piece;
-        // Returns legal moves for a given pawn
-        vector<Pos> get_legal_moves(Board * board)
-        {
-            // If it is at the end, it can't move
-            vector<Pos> moves;
-            if(row == 7)
-                return moves; 
+    // If it is at the end, it can't move
+    vector<Pos> moves;
+    if(row == 7)
+        return moves; 
 
+    // Checks if the tile ahead is empty
+    if(board->tiles[row+1][col]->type == EMPTY)
+        moves.push_back(init_pos(row + 1, col));
+    // Checks if the pawn can capture
+    if(row != 7 && board->tiles[row+1][col + 1]->type != EMPTY)
+        moves.push_back(init_pos(row + 1, col + 1));
+
+    if(row != 0 && board->tiles[row+1][col - 1]->type != EMPTY)
+        moves.push_back(init_pos(row + 1, col - 1));
             
-            if(board->tiles[row+1][col]->type == EMPTY)
-                moves.push_back(init_pos(row + 1, col));
+    return moves;
+}
 
-            if(row != 7 && board->tiles[row+1][col + 1]->type != EMPTY)
-                moves.push_back(init_pos(row + 1, col + 1));
+vector<Pos> Bishop::get_legal_moves(Board * board)
+{
+    vector<Pos> moves;
+    int nrow = this->row;
+    int ncol = this->col;
+    while(in_bounds(nrow + 1, ncol + 1)) moves.push_back(init_pos(++nrow, ++ncol));
+    nrow = this->row;
+    ncol = this->col;
+    while(in_bounds(nrow - 1, ncol + 1)) moves.push_back(init_pos(--nrow, ++ncol));
+    nrow = this->row;
+    ncol = this->col;
+    while(in_bounds(nrow - 1, ncol - 1)) moves.push_back(init_pos(--nrow, --ncol));
+    nrow = this->row;
+    ncol = this->col;
+    while(in_bounds(nrow + 1, ncol - 1)) moves.push_back(init_pos(++nrow, --ncol));
 
-            if(row != 0 && board->tiles[row+1][col - 1]->type != EMPTY)
-                moves.push_back(init_pos(row + 1, col - 1));
-            
-            return moves;
-        }
 
-    private:
-        Type type = PAWN;
-};
-
+    return moves;
+}
 
 
 int main()
 {
-    Pawn pawn(1,2);
+    Bishop bishop(1,2, true);
     Board * board = init_pawn_board();
-    pawn.get_legal_moves(board);
-    for(Pos pos : pawn.get_legal_moves(board))
+    for(Pos pos : bishop.get_legal_moves(board))
     {
         print_pos(pos);
     }
-    cout << "Hi";
+
+    cout << "Hi" << endl;
+
     return 0;
 }

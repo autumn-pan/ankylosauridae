@@ -16,6 +16,6 @@
 
     Tile * init_tile(Type type);
     Board * init_pawn_board();
-
+    bool in_bounds(int row, int col);
     
 #endif

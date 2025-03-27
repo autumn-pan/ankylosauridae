@@ -32,8 +32,19 @@ class Pawn : public Piece
         int material = 1;
 
         vector<Pos> get_legal_moves(Board * board);
-        void move(Board board);
+        void move(Board * board);
 
+};
+
+class Bishop : public Piece
+{
+    public:
+        using Piece::Piece;
+        Type type = BISHOP;
+        int material = 3;
+
+        vector<Pos> get_legal_moves(Board * board);
+        void move(Board * board);
 };
 
 #endif

@@ -33,3 +33,10 @@ void move_board(Board * board, int row, int col, int new_row, int new_col)
     board->tiles[new_row][new_col] = board->tiles[row][col];
     board->tiles[row][col] = init_tile(EMPTY);
 }
+
+bool in_bounds(int row, int col)
+{
+    if (row < 8 && row > -1 && col < 8 && col > -1)
+        return true;
+    return false;
+}
