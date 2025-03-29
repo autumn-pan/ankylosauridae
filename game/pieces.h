@@ -1,8 +1,30 @@
 #ifndef PIECES_H
 #define PIECES_H
 #include "types.h"
-#include "board.h"
 #include <vector>
+
+using namespace std;
+    
+enum Color
+{
+    WHITE,
+    BLACK,
+    NONE
+};
+
+typedef struct {
+    Type type;
+    // Denotes what color the tile is held
+    Color color;
+} Tile;
+
+typedef struct {
+    Tile * tiles[8][8];
+} Board;
+
+Tile * init_tile(Type type);
+Board * init_pawn_board();
+bool in_bounds(int row, int col);
 
 typedef struct {
     int row;
@@ -14,14 +36,14 @@ Pos init_pos(int row, int col);
 class Piece
 {
     public:
-        Piece(int row, int col, bool white);
+        Piece(Board * board, int row, int col, Color color, Type type);
         int row;
         int col;
-        bool white;
+        Color color;
         Type type = UNASSIGNED;
 
-        vector<Pos> get_legal_moves(Board * board);
-        void move(Board board);
+        virtual vector<Pos> get_legal_moves(Board * board);
+        void move(Board * board);
 };
 
 class Pawn : public Piece
@@ -31,7 +53,7 @@ class Pawn : public Piece
         Type type = PAWN;
         int material = 1;
 
-        vector<Pos> get_legal_moves(Board * board);
+        virtual vector<Pos> get_legal_moves(Board * board) override;
         void move(Board * board);
 
 };
@@ -43,8 +65,10 @@ class Bishop : public Piece
         Type type = BISHOP;
         int material = 3;
 
-        vector<Pos> get_legal_moves(Board * board);
+        virtual vector<Pos> get_legal_moves(Board * board) override;
         void move(Board * board);
 };
+
+
 
 #endif
