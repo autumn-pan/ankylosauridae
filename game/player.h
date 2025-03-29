@@ -6,10 +6,25 @@ using namespace std;
 class Player
 {
     public:
-        bool white;
-        Player(bool white);
+        Player(Color color);
+        Color color;
         vector<Piece*> pieces;
         int material;
-        int calculate_material(Board * board);
+        
+        int calculate_material();
+        void add_piece(Piece * piece);
+};
+
+class Game
+{
+    public:
+        Game(Board * board);
+        Board * board;
+        Player*  white;
+        Player*  black;
+        
+        Color turn;
+
+        void add(Piece * piece);
 };
 #endif

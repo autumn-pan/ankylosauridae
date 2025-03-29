@@ -40,6 +40,7 @@ class Piece
         int row;
         int col;
         Color color;
+
         Type type = UNASSIGNED;
 
         virtual vector<Pos> get_legal_moves(Board * board);

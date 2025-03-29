@@ -79,6 +79,7 @@ Piece::Piece(Board * board, int row, int col, Color color, Type type)
 
     board->tiles[row][col]->type = type;
     board->tiles[row][col]->color = color;
+
 }
 // Define base function
 vector<Pos> Piece::get_legal_moves(Board * board)
@@ -151,9 +152,14 @@ void print_board(Board * board)
 int main()
 {
     Board * board = init_pawn_board();
+    Game * game = new Game(board);
+
     Piece * bishop = (new Bishop(board, 1,2, WHITE, BISHOP));
     Piece * pawn = new Pawn(board, 3,4, BLACK, PAWN);
 
+    game->add(bishop);
+    game->add(pawn);
+    
     for(Pos pos : bishop->get_legal_moves(board))
     {
         print_pos(pos);
