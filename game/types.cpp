@@ -9,6 +9,7 @@ int get_material(Type type)
         case KNIGHT: return 3;
         case ROOK: return 5;
         case QUEEN: return 9;
-        default: return -1;
+        case KING: return 100000;
+        default: return 0;
     }
 }
