@@ -26,6 +26,13 @@ Tile * init_tile(Type type)
     return tile;
 }
 
+bool pos_equals(Pos pos1, Pos pos2)
+{
+    if (pos1.row == pos2.row && pos1.col == pos2.col)
+        return true;
+    return false;
+}
+
 Board * init_pawn_board()
 {
     Board * board = (Board *)malloc(sizeof(Board));
@@ -76,17 +83,20 @@ Piece::Piece(Board * board, int row, int col, Color color, Type type)
     this->col = col;
     this->color = color;
     this->type = type;
+    this->board = board;
 
     board->tiles[row][col]->type = type;
     board->tiles[row][col]->color = color;
 
 }
-// Define base function
+// Define base functions
 vector<Pos> Piece::get_legal_moves(Board * board)
 {
     vector<Pos> moves;
     return moves;
 }
+
+
 
 
 
@@ -136,7 +146,7 @@ vector<Pos> Bishop::get_legal_moves(Board * board)
     }
     return moves;
 }
-
+// Moves a piece to another position
 void print_board(Board * board)
 {
     for (int i = 0; i < 8; i++)
@@ -145,6 +155,27 @@ void print_board(Board * board)
         for (int j = 0; j < 8; j++)
         {
             cout << get_material(board->tiles[i][j]->type)<< ", ";
+        }
+    }
+}
+
+
+// Move a piece to a specific square
+void Piece::move(Pos pos, Game * game) {
+    // Check every legal move to see if the move if legal
+    Board * board = this->board;
+    for (Pos npos : this->get_legal_moves(board))
+    {
+        if (pos_equals(npos, pos))
+        {
+            move_board(board, this->row, this->col, pos.row, pos.col);
+
+            if (this->color == BLACK)
+                game->white->pop_piece(get_piece_from_pos(game->white, pos));
+            else    
+                game->black->pop_piece(get_piece_from_pos(game->black, pos));
+
+            break;
         }
     }
 }
@@ -161,11 +192,14 @@ int main()
     game->add(pawn);
     
     for(Pos pos : bishop->get_legal_moves(board))
-    {
         print_pos(pos);
-    }
+    cout << "material: " << game->black->calculate_material();
+    bishop->move(init_pos(3,4), game);
 
+    for(Pos pos : bishop->get_legal_moves(board))
+        print_pos(pos);
     print_board(board);
+    cout << "material: " << game->black->calculate_material();
 
     return 0;
 }

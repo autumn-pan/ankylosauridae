@@ -1,5 +1,6 @@
 #include "player.h"
 #include "pieces.h"
+#include <algorithm>
 
 Player::Player(Color color)
 {
@@ -36,4 +37,24 @@ void Game::add(Piece * piece)
         this->white->add_piece(piece);
     else
         this->black->add_piece(piece);
+}
+
+void Player::pop_piece(Piece * piece)
+{
+    auto i = std::find(this->pieces.begin(), this->pieces.end(), piece);
+
+    if (i != this->pieces.end()) {
+        this->pieces.erase(i);
+    }
+}
+
+Piece * get_piece_from_pos(Player * player, Pos pos)
+{
+
+    for (Piece * piece : player->pieces)
+    {
+        if(piece->row == pos.row && piece->col == pos.col)
+            return piece;
+    }
+    return NULL;
 }

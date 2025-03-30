@@ -10,9 +10,11 @@ class Player
         Color color;
         vector<Piece*> pieces;
         int material;
+
         
         int calculate_material();
         void add_piece(Piece * piece);
+        void pop_piece(Piece * piece);
 };
 
 class Game
@@ -27,4 +29,6 @@ class Game
 
         void add(Piece * piece);
 };
+
+Piece * get_piece_from_pos(Player * player, Pos pos);
 #endif

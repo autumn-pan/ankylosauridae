@@ -5,6 +5,8 @@
 
 using namespace std;
     
+class Game;
+
 enum Color
 {
     WHITE,
@@ -39,12 +41,14 @@ class Piece
         Piece(Board * board, int row, int col, Color color, Type type);
         int row;
         int col;
+        Board * board;
         Color color;
 
         Type type = UNASSIGNED;
 
         virtual vector<Pos> get_legal_moves(Board * board);
-        void move(Board * board);
+
+        void move(Pos pos, Game * game);
 };
 
 class Pawn : public Piece
@@ -55,8 +59,6 @@ class Pawn : public Piece
         int material = 1;
 
         virtual vector<Pos> get_legal_moves(Board * board) override;
-        void move(Board * board);
-
 };
 
 class Bishop : public Piece
@@ -67,7 +69,6 @@ class Bishop : public Piece
         int material = 3;
 
         virtual vector<Pos> get_legal_moves(Board * board) override;
-        void move(Board * board);
 };
 
 
