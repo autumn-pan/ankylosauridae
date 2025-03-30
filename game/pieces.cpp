@@ -194,6 +194,7 @@ vector<Pos> get_axis_moves(Board * board, Piece * piece)
     }
     return moves;
 }
+
 vector<Pos> Rook::get_legal_moves(Board * board)
 {
     return get_axis_moves(board, this);
