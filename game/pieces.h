@@ -71,6 +71,14 @@ class Bishop : public Piece
         virtual vector<Pos> get_legal_moves(Board * board) override;
 };
 
+class Knight : public Piece
+{
+    public:
+        using Piece::Piece;
+        Type type = KNIGHT;
+        int material = 3;
 
+        virtual vector<Pos> get_legal_moves(Board * board) override;
+};
 
 #endif

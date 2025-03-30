@@ -146,6 +146,26 @@ vector<Pos> Bishop::get_legal_moves(Board * board)
     }
     return moves;
 }
+
+vector<Pos> Knight::get_legal_moves(Board * board)
+{
+    // Knight movement table
+    int positions[8][2] = {
+        {-1, -2}, {1, -2},
+        {-2, -1}, {2, -1},
+        {-2, 1}, {2, 1},
+        {-1, 2}, {1, 2}
+    };
+
+    vector<Pos> moves;
+    for (int i = 0; i < 8; i++)
+    {
+        
+        if (in_bounds(this->row + positions[i][0], this->col + positions[i][1]) && board->tiles[this->row + positions[i][0]][this->col + positions[i][1]]->color == switch_color(this->color))
+            moves.push_back(init_pos(this->row + positions[i][0], this->col + positions[i][1]));
+    }
+    return moves;
+}
 // Moves a piece to another position
 void print_board(Board * board)
 {
@@ -187,19 +207,14 @@ int main()
 
     Piece * bishop = (new Bishop(board, 1,2, WHITE, BISHOP));
     Piece * pawn = new Pawn(board, 3,4, BLACK, PAWN);
-
+    Piece * knight = new Knight(board, 1,3, BLACK, KNIGHT);
     game->add(bishop);
     game->add(pawn);
+    game->add(knight);
+    for(Pos pos : knight->get_legal_moves(board))
+    {
+        print_pos(pos);
+    }
     
-    for(Pos pos : bishop->get_legal_moves(board))
-        print_pos(pos);
-    cout << "material: " << game->black->calculate_material();
-    bishop->move(init_pos(3,4), game);
-
-    for(Pos pos : bishop->get_legal_moves(board))
-        print_pos(pos);
-    print_board(board);
-    cout << "material: " << game->black->calculate_material();
-
     return 0;
 }
