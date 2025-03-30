@@ -122,11 +122,11 @@ vector<Pos> Pawn::get_legal_moves(Board * board)
     return moves;
 }
 
-vector<Pos> Bishop::get_legal_moves(Board * board)
+vector<Pos> get_diagonal_moves(Board * board, Piece * piece)
 {
     vector<Pos> moves;
-    int nrow = this->row;
-    int ncol = this->col;
+    int nrow = piece->row;
+    int ncol = piece->col;
     int directions[4][2] = {{1,1},{-1,1},{-1,-1},{1,-1}};
 
     for(int i = 0; i < 4; i++)
@@ -138,13 +138,17 @@ vector<Pos> Bishop::get_legal_moves(Board * board)
 
             moves.push_back(init_pos(nrow, ncol));
         }
-        if(in_bounds(nrow + directions[i][0], ncol + directions[i][1]) && board->tiles[nrow+directions[i][0]][ncol+directions[i][1]]->color == switch_color(this->color))
+        if(in_bounds(nrow + directions[i][0], ncol + directions[i][1]) && board->tiles[nrow+directions[i][0]][ncol+directions[i][1]]->color == switch_color(piece->color))
                 moves.push_back(init_pos(nrow + directions[i][0], ncol+directions[i][1]));
 
-        nrow = this->row;
-        ncol = this->col;
+        nrow = piece->row;
+        ncol = piece->col;
     }
     return moves;
+}
+vector<Pos> Bishop::get_legal_moves(Board * board)
+{
+    return get_diagonal_moves(board, this);
 }
 
 vector<Pos> Knight::get_legal_moves(Board * board)
@@ -167,13 +171,12 @@ vector<Pos> Knight::get_legal_moves(Board * board)
     return moves;
 }
 
-vector<Pos> Rook::get_legal_moves(Board * board)
+vector<Pos> get_axis_moves(Board * board, Piece * piece)
 {
     int directions[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-
     vector<Pos> moves;
-    int nrow = this->row;
-    int ncol = this->col;
+    int nrow = piece->row;
+    int ncol = piece->col;
     for (int i = 0; i < 4; i++)
     {
         while(in_bounds(nrow + directions[i][0], ncol + directions[i][1]) && board->tiles[nrow+directions[i][0]][ncol+directions[i][1]]->type == EMPTY)
@@ -183,12 +186,33 @@ vector<Pos> Rook::get_legal_moves(Board * board)
 
             moves.push_back(init_pos(nrow, ncol));
         }
-        if(in_bounds(nrow + directions[i][0], ncol + directions[i][1]) && board->tiles[nrow+directions[i][0]][ncol+directions[i][1]]->color == switch_color(this->color))
+        if(in_bounds(nrow + directions[i][0], ncol + directions[i][1]) && board->tiles[nrow+directions[i][0]][ncol+directions[i][1]]->color == switch_color(piece->color))
                 moves.push_back(init_pos(nrow + directions[i][0], ncol+directions[i][1]));
 
-        nrow = this->row;
-        ncol = this->col;
+        nrow = piece->row;
+        ncol = piece->col;
     }
+    return moves;
+}
+vector<Pos> Rook::get_legal_moves(Board * board)
+{
+    return get_axis_moves(board, this);
+}
+
+vector<Pos> Queen::get_legal_moves(Board * board)
+{
+    vector<Pos> moves;
+
+    for (Pos pos : get_diagonal_moves(board, this))
+    {
+        moves.push_back(pos);
+    }
+
+    for(Pos pos : get_axis_moves(board, this))
+    {
+        moves.push_back(pos);
+    }
+
     return moves;
 }
 // Moves a piece to another position
@@ -224,6 +248,7 @@ void Piece::move(Pos pos, Game * game) {
     }
 }
 
+
 int main()
 {
     Board * board = init_pawn_board();
@@ -233,14 +258,17 @@ int main()
     Piece * pawn = new Pawn(board, 3,4, BLACK, PAWN);
     Piece * knight = new Knight(board, 1,3, BLACK, KNIGHT);
     Piece * rook = new Rook(board, 2,3, WHITE, ROOK);
+    Piece * queen = new Queen(board, 2, 2, BLACK, QUEEN);
     game->add(bishop);
     game->add(pawn);
     game->add(knight);
     game->add(rook);
-    for(Pos pos : rook->get_legal_moves(board))
+    game->add(queen);
+
+    for(Pos pos : queen->get_legal_moves(board))
     {
         print_pos(pos);
     }
     print_board(board);
     return 0;
-}
+}  

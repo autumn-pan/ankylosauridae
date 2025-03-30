@@ -90,4 +90,13 @@ class Rook : public Piece
 
         virtual vector<Pos> get_legal_moves(Board * board) override;
 };
+
+class Queen : public Piece
+{
+    using Piece::Piece;
+    Type type = QUEEN;
+    int material = 9;
+    
+    virtual vector<Pos> get_legal_moves(Board * board) override;
+};
 #endif
