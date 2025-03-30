@@ -81,4 +81,13 @@ class Knight : public Piece
         virtual vector<Pos> get_legal_moves(Board * board) override;
 };
 
+class Rook : public Piece
+{
+    public:
+        using Piece::Piece;
+        Type type = ROOK;
+        int material = 5;
+
+        virtual vector<Pos> get_legal_moves(Board * board) override;
+};
 #endif
